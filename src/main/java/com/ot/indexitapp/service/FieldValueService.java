@@ -19,18 +19,16 @@ public class FieldValueService {
 
     @Transactional
     public List<FieldValue> saveOrUpdateFieldValues(List<FieldValue> newValues) {
-        return newValues.stream().map(newValue -> {
-            return fieldDefinitionRepository.findById(newValue.getFieldDefinition().getId()).map(definition -> {
-                FieldValue existingValue = definition.getFieldValue();
-                if (existingValue != null) {
-                    existingValue.setFieldValue(newValue.getFieldValue());
-                } else {
-                    existingValue = newValue;
-                    existingValue.setFieldDefinition(definition);
-                    definition.setFieldValue(existingValue);
-                }
-                return fieldValueRepository.save(existingValue);
-            }).orElseThrow(() -> new RuntimeException("Field Definition not found with id: " + newValue.getFieldDefinition().getId()));
-        }).collect(Collectors.toList());
+        return newValues.stream().map(newValue -> fieldDefinitionRepository.findById(newValue.getFieldDefinition().getId()).map(definition -> {
+            FieldValue existingValue = definition.getFieldValue();
+            if (existingValue != null) {
+                existingValue.setFieldValue(newValue.getFieldValue());
+            } else {
+                existingValue = newValue;
+                existingValue.setFieldDefinition(definition);
+                definition.setFieldValue(existingValue);
+            }
+            return fieldValueRepository.save(existingValue);
+        }).orElseThrow(() -> new RuntimeException("Field Definition not found with id: " + newValue.getFieldDefinition().getId()))).collect(Collectors.toList());
     }
 }
