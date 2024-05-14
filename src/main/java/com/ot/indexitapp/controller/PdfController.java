@@ -1,7 +1,7 @@
 package com.ot.indexitapp.controller;
 
+import com.ot.indexitapp.model.FileDetail;
 import com.ot.indexitapp.service.PdfFileService;
-import org.springframework.core.io.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -21,9 +21,9 @@ public class PdfController {
     @Autowired
     private PdfFileService fileService;
 
-    @GetMapping("/api/pdf/list")
-    public ResponseEntity<List<String>> listPdfFiles(@RequestParam String path) {
-        List<String> files = fileService.listPdfFiles(path);
+    @GetMapping("/api/pdf/files")
+    public ResponseEntity<List<FileDetail>> getFiles(@RequestParam String directoryPath) {
+        List<FileDetail> files = fileService.listPdfFiles(directoryPath);
         return ResponseEntity.ok(files);
     }
 
@@ -46,5 +46,6 @@ public class PdfController {
                 .contentType(MediaType.parseMediaType(contentType))
                 .body(resource);
     }
+
 
 }
